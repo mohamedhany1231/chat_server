@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "contact" ADD COLUMN     "lastModified" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP;

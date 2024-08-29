@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id               String    @id @default(uuid())
+  name             String
+  email            String    @unique
+  password         String
+  photo            String?
+  messagesSent     message[] @relation("send-message")
+  messagesRecieved message[] @relation("receive-message")
+
+  contacts    contact[] @relation("has-contact")
+  contactedBy contact[] @relation("contacted-by")
+
+  socketId String? @unique
+}
+
+model contact {
+  id     String @id @default(uuid())
+  user   user   @relation("has-contact", fields: [userId], references: [id])
+  userId String
+
+  contact   user?   @relation("contacted-by", fields: [contactId], references: [id])
+  contactId String?
+
+  group   group?  @relation(fields: [groupId], references: [id])
+  groupId String?
+
+  type contactType @default(user)
+
+  lastMessage message? @relation("last-message", fields: [messageId], references: [id])
+  messageId   String?
+
+  lastModified DateTime @updatedAt
+
+  @@unique([userId, groupId])
+  @@unique([userId, contactId])
+  @@unique([userId, messageId])
+}
+
+enum contactType {
+  user
+  group
+}
+
+model group {
+  id        String    @id @default(uuid())
+  name      String
+  contact   contact[] @relation()
+  contactId String[]
+  message   message[] @relation("group-message")
+}
+
+model message {
+  id      String   @id @default(uuid())
+  sentAt  DateTime @default(now())
+  content String
+
+  sender user   @relation("send-message", references: [id], fields: [from])
+  from   String
+
+  reciever user?   @relation("receive-message", references: [id], fields: [to])
+  to       String?
+
+  group   group?  @relation("group-message", references: [id], fields: [groupId])
+  groupId String?
+
+  type contactType @default(user)
+
+  readBy String[] @default([])
+
+  destinationType contactType @default(user)
+  contact         contact[]   @relation("last-message")
+}
