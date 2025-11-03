@@ -12,11 +12,19 @@
 
 ## 📋 Overview
 
-This project is a **real-time chat server** built with TypeScript and Express. It supports multiple users, rooms, and instant messaging using Socket.IO. Prisma ORM handles database interactions for user and chat data.
+This project is a **real-time chat server** built with TypeScript and Express. It supports **user-to-user messaging, group chats, message seen indicators, typing indicators**, and more. Prisma ORM handles database interactions, and Socket.IO provides instant messaging functionality.
 
 ---
 
 ## ✨ Key Features
+
+### 💬 Real-Time Chat
+- **1-to-1 and Group Chat** support  
+- **Seen indicator**: know when the other person has read the message  
+- **Typing indicator**: shows when the other user is typing  
+- **Message broadcasting** to all room participants  
+- Multiple rooms / channels support  
+- User presence (online/offline) tracking  
 
 ### 🔐 Authentication & Security
 - JWT-based authentication  
@@ -24,21 +32,15 @@ This project is a **real-time chat server** built with TypeScript and Express. I
 - Password hashing with bcrypt  
 - Input validation and sanitization  
 
-### 💬 Real-Time Chat
-- **Socket.IO integration** for instant messaging  
-- Multiple rooms / channels support  
-- User presence and typing indicators  
-- Message broadcasting and private messaging  
-
 ### 🗄️ Database & ORM
 - Prisma ORM for database modeling  
-- PostgreSQL / SQLite support (configurable)  
+- PostgreSQL / SQLite support  
 - User, message, and room models  
 
 ### 🧩 Utilities
-- Error handling with centralized middleware  
-- Async wrapper for controller functions  
-- Structured project architecture for scalability  
+- Centralized error handling middleware  
+- Async wrapper for controllers  
+- Scalable project structure  
 
 ---
 
@@ -121,10 +123,11 @@ npm start
 | Event | Description |
 |-------|-------------|
 | `connect` | Establish connection |
-| `message` | Send message to room |
-| `joinRoom` | Join a specific room |
-| `leaveRoom` | Leave room |
-| `typing` | Typing indicator |
+| `message` | Send message to room or user |
+| `joinRoom` | Join a room or group chat |
+| `leaveRoom` | Leave a room |
+| `typing` | Notify others when typing |
+| `seen` | Notify others when message has been read |
 
 ---
 
@@ -148,7 +151,8 @@ npm start
   roomId: string,
   senderId: string,
   content: string,
-  timestamp: Date
+  timestamp: Date,
+  seenBy: [User IDs]
 }
 ```
 
@@ -178,8 +182,8 @@ npm start
 
 ## 📈 Performance & Monitoring
 - Real-time message delivery via Socket.IO  
-- User presence tracking  
-- Scalable architecture for multiple rooms and users  
+- User presence and typing indicators  
+- Scalable architecture supporting multiple rooms and users  
 
 ---
 
