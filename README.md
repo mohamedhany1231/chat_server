@@ -24,7 +24,6 @@ This project is a **real-time chat server** built with TypeScript and Express. I
 - **Typing indicator**: shows when the other user is typing  
 - **Message broadcasting** to all room participants  
 - Multiple rooms / channels support  
-- User presence (online/offline) tracking  
 
 ### 🔐 Authentication & Security
 - JWT-based authentication  
